@@ -23,12 +23,10 @@ class Button(Circle):
         if distance < self.radius and self.current_state is state.STOPPED \
            and self.current_status is status.AVAILABLE:
             self.current_state = state.CLICKED
-            print("FORCE CLICKED: ", self.button_force)
 
     @listen('mouse-button-up', 'left')
     def left_click_up(self, pos):
         if self.current_state is state.CLICKED:
-            print("FORCE RELEASED: ", self.button_force)
             self.button_force = self.pos - Vec2(pos)
             self.button_force = 2 * self.button_force
             self.vel = self.button_force
@@ -42,10 +40,14 @@ class Button(Circle):
             friction = - coef_friction * self.vel.normalize()
             self.apply_force(friction, 1.0 / 60)
 
-            print(self.vel.norm())
             if self.vel.norm() < 2.5:
                 self.vel = Vec2(0, 0)
                 self.current_state = state.STOPPED
+
+    @listen('collision')
+    def change_status(self, col):
+        for button in col:
+            button.current_state = state.MOVING
 
     def __distance(self, a, b):
         return (a - b).norm()

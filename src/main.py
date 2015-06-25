@@ -5,11 +5,6 @@ from mathtools import Vec2
 from scene import Scene, SCREEN_WIDTH, SCREEN_HEIGHT
 import random
 
-coef_friction = 15 ** 5
-
-STATE = ["ACTIVE", "WAITING_FORCE", "COMPUTING_FORCE", "APPLYING_FORCE"]
-EVENT = ["CLICKED", "MOVING", "RELEASED"]
-MAX_FORCE = 170
 TEAM_SIZE = 4
 
 
@@ -19,17 +14,19 @@ class ButtonSoccer(World):
         World.__init__(self)
         self.add(Scene())
         self.force = Vec2(0, 0)
-        self.current_state = "ACTIVE"
-        self.current_event = None
         self.add_bounds(width=10)
         self.button_list = []
         self.create_buttons()
 
     def create_buttons(self):
-        for i in range(TEAM_SIZE):
-            button = Button('blue')
-            button.pos = (random.randint(20, SCREEN_WIDTH),
-                          random.randint(20, SCREEN_HEIGHT))
+        self.create_team('blue', TEAM_SIZE)
+        self.create_team('red', TEAM_SIZE)
+
+    def create_team(self, color, team_size):
+        for i in range(team_size):
+            button = Button(color)
+            button.pos = (random.randint(60, SCREEN_WIDTH - 60),
+                          random.randint(60, SCREEN_HEIGHT - 60))
             self.button_list.append(button)
             self.add(button)
 
