@@ -2,10 +2,19 @@
 from FGAme import listen, World
 from button import Button
 from mathtools import Vec2
-from scene import Scene, SCREEN_WIDTH, SCREEN_HEIGHT
+from scene import Scene, SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_MIDDLE
 import random
 
 TEAM_SIZE = 4
+TEAM_A_POSITIONS = ((SCREEN_MIDDLE[0] - 100, SCREEN_MIDDLE[1] + 200),
+                    (SCREEN_MIDDLE[0] - 100, SCREEN_MIDDLE[1] - 200),
+                    (SCREEN_MIDDLE[0] - 230, SCREEN_MIDDLE[1] + 70),
+                    (SCREEN_MIDDLE[0] - 230, SCREEN_MIDDLE[1] - 70),)
+
+TEAM_B_POSITIONS = ((SCREEN_MIDDLE[0] + 100, SCREEN_MIDDLE[1] + 200),
+                    (SCREEN_MIDDLE[0] + 100, SCREEN_MIDDLE[1] - 200),
+                    (SCREEN_MIDDLE[0] + 230, SCREEN_MIDDLE[1] + 70),
+                    (SCREEN_MIDDLE[0] + 230, SCREEN_MIDDLE[1] - 70),)
 
 
 class ButtonSoccer(World):
@@ -19,14 +28,13 @@ class ButtonSoccer(World):
         self.create_buttons()
 
     def create_buttons(self):
-        self.create_team('blue', TEAM_SIZE)
-        self.create_team('red', TEAM_SIZE)
+        self.create_team('blue', TEAM_A_POSITIONS)
+        self.create_team('red', TEAM_B_POSITIONS)
 
-    def create_team(self, color, team_size):
-        for i in range(team_size):
+    def create_team(self, color, team_positions):
+        for position in team_positions:
             button = Button(color)
-            button.pos = (random.randint(60, SCREEN_WIDTH - 60),
-                          random.randint(60, SCREEN_HEIGHT - 60))
+            button.pos = position
             self.button_list.append(button)
             self.add(button)
 
