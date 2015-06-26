@@ -1,6 +1,7 @@
 # -*- coding utf-8 -*-
 from FGAme import listen, World
 from button import Button
+from ball import Ball
 from mathtools import Vec2
 from scene import Scene, SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_MIDDLE
 import random
@@ -26,6 +27,8 @@ class ButtonSoccer(World):
         self.add_bounds(width=10)
         self.button_list = []
         self.create_buttons()
+        self.ball = Ball()
+        self.add(self.ball)
 
     def create_buttons(self):
         self.create_team('blue', TEAM_A_POSITIONS)
@@ -40,6 +43,7 @@ class ButtonSoccer(World):
 
     @listen('frame-enter')
     def force_bounds(self):
+        self.ball.update_forces()
         for button in self.button_list:
             button.update_forces()
 
