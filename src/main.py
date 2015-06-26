@@ -5,6 +5,7 @@ from ball import Ball
 from mathtools import Vec2
 from scene import Scene, SCREEN_MIDDLE
 import status
+import state
 
 TEAM_SIZE = 4
 TEAM_A_POSITIONS = ((SCREEN_MIDDLE[0] - 100, SCREEN_MIDDLE[1] + 200),
@@ -28,6 +29,9 @@ class ButtonSoccer(World):
         self.buttons_team_a = []
         self.buttons_team_b = []
         self.create_buttons()
+        self.register_listener()
+        self.current_team = None
+
         self.ball = Ball()
         self.add(self.ball)
 
@@ -45,9 +49,9 @@ class ButtonSoccer(World):
             self.add(button)
         return buttons
 
-    def change_turn(self, team_a, team_b):
-        self.change_availability(team_a)
-        self.change_availability(team_b)
+    def change_turn(self):
+        self.change_availability(self.buttons_team_a)
+        self.change_availability(self.buttons_team_b)
 
     def change_availability(self, team):
         for button in team:
@@ -67,8 +71,35 @@ class ButtonSoccer(World):
         for button in self.buttons_team_b:
             button.update_forces()
 
-    def distance(self, a, b):
-        return (a - b).norm()
+    def get_current_team(self, button):
+        if button in self.buttons_team_a:
+            self.current_team = self.buttons_team_a
+        else:
+            self.current_team = self.buttons_team_b
+
+    def end_turn(self):
+        team_a_stopped = False
+        for button in self.buttons_team_a:
+            if button.current_state is state.STOPPED:
+                team_a_stopped = True
+
+        team_b_stopped = False
+        for button in self.buttons_team_b:
+            if button.current_state is state.STOPPED:
+                team_b_stopped = True
+
+        if team_a_stopped and team_b_stopped:
+            self.change_turn()
+
+    def register_listener(self):
+        for button in self.buttons_team_a:
+            button.listen('released', self.get_current_team, button)
+            button.listen('stopped', self.end_turn)
+
+        for button in self.buttons_team_b:
+            button.listen('released', self.get_current_team, button)
+            button.listen('stopped', self.end_turn)
+
 
 if __name__ == '__main__':
     game = ButtonSoccer()

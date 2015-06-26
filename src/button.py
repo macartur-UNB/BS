@@ -1,5 +1,5 @@
 # -*- coding utf-8 -*-
-from FGAme import Vec2, Circle, listen
+from FGAme import Vec2, Circle, listen, Signal, EventDispatcher
 # from main import coef_friction
 import state
 import status
@@ -9,7 +9,9 @@ MAX_FORCE = 170
 coef_friction = 15 ** 5
 
 
-class Button(Circle):
+class Button(Circle, EventDispatcher):
+    released = Signal('released')
+    stopped = Signal('stopped')
 
     def __init__(self, color):
         super(Button, self).__init__(RADIUS, color=color)
@@ -35,6 +37,7 @@ class Button(Circle):
             if self.button_force.norm() > MAX_FORCE:
                 self.button_force = self.button_force.normalize() * MAX_FORCE
             self.current_state = state.MOVING
+            self.trigger_released()
 
     def update_forces(self):
         if self.current_state is state.MOVING:
@@ -44,6 +47,7 @@ class Button(Circle):
             if self.vel.norm() < 2.5:
                 self.vel = Vec2(0, 0)
                 self.current_state = state.STOPPED
+                self.trigger_stopped()
 
     @listen('collision')
     def change_status(self, col):
