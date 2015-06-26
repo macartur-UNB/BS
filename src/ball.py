@@ -1,5 +1,5 @@
 # -*- coding utf-8 -*-
-from FGAme import Vec2, Circle
+from FGAme import Vec2, Circle, listen
 from scene import SCREEN_MIDDLE
 import state
 
@@ -27,3 +27,8 @@ class Ball(Circle):
             if self.vel.norm() < 2.5:
                 self.vel = Vec2(0, 0)
                 self.current_state = state.STOPPED
+
+    @listen('collision')
+    def change_status(self, col):
+        for button in col:
+            button.current_state = state.MOVING

@@ -13,6 +13,7 @@ class Button(Circle):
 
     def __init__(self, color):
         super(Button, self).__init__(RADIUS, color=color)
+        self.team_color = color
         self.current_state = state.STOPPED
         self.current_status = status.AVAILABLE
         self.button_force = Vec2(0, 0)
