@@ -91,17 +91,14 @@ class ButtonSoccer(World):
             self.current_team = self.buttons_team_b
 
     def end_turn(self):
-        team_a_stopped = False
-        for button in self.buttons_team_a:
+        stopped = []
+        for button in self.buttons_team_a + self.buttons_team_b:
+            if button.current_state is state.MOVING:
+                stopped.append(False)
             if button.current_state is state.STOPPED:
-                team_a_stopped = True
+                stopped.append(True)
 
-        team_b_stopped = False
-        for button in self.buttons_team_b:
-            if button.current_state is state.STOPPED:
-                team_b_stopped = True
-
-        if team_a_stopped and team_b_stopped:
+        if False not in stopped:
             self.change_turn()
 
     def register_listener(self):
