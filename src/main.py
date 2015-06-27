@@ -4,6 +4,7 @@ from button import Button
 from ball import Ball
 from mathtools import Vec2
 from scene import Scene, SCREEN_MIDDLE
+from goal import Goal 
 import status
 import state
 
@@ -29,11 +30,23 @@ class ButtonSoccer(World):
         self.buttons_team_a = []
         self.buttons_team_b = []
         self.create_buttons()
+        self.create_goal()
         self.register_listener()
         self.current_team = None
 
         self.ball = Ball()
         self.add(self.ball)
+
+    def create_goal(self):
+        self.goals = list()
+        self.goals.append(Goal("RIGHT"))
+        self.goals.append(Goal("LEFT")) 
+
+
+        for gol in self.goals:
+            self.add(gol.goal_area())
+            for dash in gol.elements():
+                self.add(dash)
 
     def create_buttons(self):
         self.buttons_team_a = self.create_team('blue', TEAM_A_POSITIONS)
