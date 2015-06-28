@@ -1,0 +1,3 @@
+[submodule "FGAme"]
+	path = FGAme
+	url = git@github.com:macartur/FGAme.git
