@@ -1,14 +1,14 @@
-from FGAme import Circle,Rectangle
-from scene import SCREEN_WIDTH,SCREEN_HEIGHT
+from FGAme import Circle
+from scene import SCREEN_WIDTH
 
 
 DASH_RADIUS = 15
 
-position1 = [(50,230), (50,380)]
-position2 = [(SCREEN_WIDTH - 50,380), (SCREEN_WIDTH - 50,230)]
+position1 = [(40, 380), (40, 230)]
+position2 = [(SCREEN_WIDTH - 40, 380), (SCREEN_WIDTH - 40, 230)]
 
-area1 = (40,60,380,230) 
-area2 = (SCREEN_WIDTH - 60, SCREEN_WIDTH -40,380,230) 
+area1 = (40, 60, 380, 230)
+area2 = (SCREEN_WIDTH - 60, SCREEN_WIDTH - 40, 380, 230)
 
 
 SIDE_LEFT = "LEFT"
@@ -16,33 +16,34 @@ SIDE_RIGHT = "RIGHT"
 
 
 class Goal:
-    def __init__(self,side):
-        self.__elements = []
+    def __init__(self, side):
         self.__side = side
 
         if SIDE_LEFT in self.__side:
-            for pos  in position1:
-                self.__elements.append(Dash(pos))
+            self.superior_dash = Dash(position1[0])
+            self.inferior_dash = Dash(position1[1])
         else:
-            for pos in position2:
-                self.__elements.append(Dash(pos))
+            self.superior_dash = Dash(position2[0])
+            self.inferior_dash = Dash(position2[1])
 
-    def goal_area(self):
-        self.__goal_area = None
-        if self.__side in SIDE_LEFT: 
-            self.__goal_area = Rectangle(area1,color='red',mass='inf')
-        else:
-            self.__goal_area = Rectangle(area2,color='red',mass='inf')
+    def is_goal(self, pos):
+        x_goal = False
+        if self.__side is SIDE_LEFT:
+            x_goal = (pos.x <= self.inferior_dash.pos.x)
+        elif self.__side is SIDE_RIGHT:
+            x_goal = (pos.x >= self.inferior_dash.pos.x)
 
-        return self.__goal_area
+        y_goal = (pos.y < self.superior_dash.pos.y) and \
+                 (pos.y > self.inferior_dash.pos.y)
 
+        return x_goal and y_goal
 
     def elements(self):
-        return self.__elements
+        return [self.superior_dash, self.inferior_dash]
 
 
 class Dash(Circle):
-    def __init__(self,pos=(0,0)):
-        super(Dash,self).__init__(DASH_RADIUS,color='black')
-        self.mass= 'inf'
+    def __init__(self, pos=(0, 0)):
+        super(Dash, self).__init__(DASH_RADIUS, color='white')
+        self.mass = 'inf'
         self.move(pos)

@@ -6,6 +6,7 @@ from pointer import Pointer
 from mathtools import Vec2
 from scene import Scene, SCREEN_MIDDLE
 from goal import Goal
+from random import randint
 import status
 import state
 
@@ -44,14 +45,17 @@ class ButtonSoccer(World):
         self.goals.append(Goal("LEFT"))
 
         for gol in self.goals:
-            self.add(gol.goal_area())
             for dash in gol.elements():
                 self.add(dash)
 
     def create_buttons(self):
         self.buttons_team_a = self.create_team('blue', TEAM_A_POSITIONS)
         self.buttons_team_b = self.create_team('red', TEAM_B_POSITIONS)
-        self.change_availability(self.buttons_team_b)
+
+        if randint(1, 11) % 2 == 0:
+            self.change_availability(self.buttons_team_a)
+        else:
+            self.change_availability(self.buttons_team_b)
 
     def create_team(self, team_color, team_positions):
         buttons = []
@@ -95,11 +99,14 @@ class ButtonSoccer(World):
     @listen('frame-enter')
     def force_bounds(self):
         self.ball.update_forces()
-        for button in self.buttons_team_a:
+        for button in self.buttons_team_a + self.buttons_team_b:
             button.update_forces()
 
-        for button in self.buttons_team_b:
-            button.update_forces()
+    @listen('frame-enter')
+    def check_goal(self):
+        for goal in self.goals:
+            if goal.is_goal(self.ball.pos):
+                print("GOOOOOOOOOOOOOOOOL")
 
     def get_current_team(self, button):
         if button in self.buttons_team_a:
