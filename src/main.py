@@ -2,9 +2,10 @@
 from FGAme import listen, World, color
 from button import Button
 from ball import Ball
+from pointer import Pointer
 from mathtools import Vec2
 from scene import Scene, SCREEN_MIDDLE
-from goal import Goal 
+from goal import Goal
 import status
 import state
 
@@ -40,8 +41,7 @@ class ButtonSoccer(World):
     def create_goal(self):
         self.goals = list()
         self.goals.append(Goal("RIGHT"))
-        self.goals.append(Goal("LEFT")) 
-
+        self.goals.append(Goal("LEFT"))
 
         for gol in self.goals:
             self.add(gol.goal_area())
@@ -75,6 +75,20 @@ class ButtonSoccer(World):
                 button.current_status = status.AVAILABLE
                 button.color = button.team_color
 
+    @listen('mouse-long-press', 'left')
+    def update_poiter(self, pos):
+        self.clear_pointer()
+        for button in self.buttons_team_a + self.buttons_team_b:
+            if button.current_state is state.CLICKED:
+                size = button.pos - Vec2(pos)
+                p = Pointer(button.pos.as_tuple(), size.as_tuple())
+                self.add(p)
+
+    def clear_pointer(self):
+        for element in self.get_render_tree().walk():
+            if isinstance(element, Pointer):
+                self.remove(element)
+
     @listen('frame-enter')
     def force_bounds(self):
         self.ball.update_forces()
@@ -102,14 +116,10 @@ class ButtonSoccer(World):
             self.change_turn()
 
     def register_listener(self):
-        for button in self.buttons_team_a:
+        for button in self.buttons_team_a + self.buttons_team_b:
             button.listen('released', self.get_current_team, button)
+            button.listen('released', self.clear_pointer)
             button.listen('stopped', self.end_turn)
-
-        for button in self.buttons_team_b:
-            button.listen('released', self.get_current_team, button)
-            button.listen('stopped', self.end_turn)
-
 
 if __name__ == '__main__':
     game = ButtonSoccer()
