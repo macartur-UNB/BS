@@ -80,9 +80,12 @@ class ButtonSoccer(World):
         self.clear_pointer()
         for button in self.buttons_team_a + self.buttons_team_b:
             if button.current_state is state.CLICKED:
-                size = button.pos - Vec2(pos)
-                p = Pointer(button.pos.as_tuple(), size.as_tuple())
-                self.add(p)
+                try:
+                    size = button.pos - Vec2(pos)
+                    p = Pointer(button.pos.as_tuple(), size.as_tuple())
+                    self.add(p)
+                except ZeroDivisionError:
+                    pass
 
     def clear_pointer(self):
         for element in self.get_render_tree().walk():
