@@ -1,6 +1,6 @@
 # BS
 
-Button Soccer using FGame
+Button Soccer using FGAme
 
 ### Install Dependencies
 
