@@ -1,10 +1,10 @@
 # -*- coding utf-8 -*-
 from FGAme import Vec2, Circle, listen
-from scene import SCREEN_MIDDLE
+from scene import SCREEN_MIDDLE, SCALE
 import state
 
 MAX_VEL = 300
-RADIUS = 13
+RADIUS = 2 * SCALE
 coef_friction = 11 ** 5
 
 class Ball(Circle):

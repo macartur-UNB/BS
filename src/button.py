@@ -2,8 +2,9 @@
 from FGAme import Vec2, Circle, listen, Signal, EventDispatcher
 # from main import coef_friction
 from state import *
+from scene import *
 
-RADIUS = 30
+RADIUS = 6 * SCALE
 MAX_FORCE = 170
 coef_friction = 15 ** 5
 

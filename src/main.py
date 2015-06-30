@@ -4,7 +4,7 @@ from button import Button
 from ball import Ball
 from pointer import Pointer
 from mathtools import Vec2
-from scene import Scene, SCREEN_MIDDLE
+from scene import *
 from goal import Goal
 from random import randint
 from state import *
@@ -13,15 +13,15 @@ from team import Team
 MOVES = 3
 
 TEAM_SIZE = 4
-TEAM_A_POSITIONS = ((SCREEN_MIDDLE[0] - 100, SCREEN_MIDDLE[1] + 200),
-                    (SCREEN_MIDDLE[0] - 100, SCREEN_MIDDLE[1] - 200),
-                    (SCREEN_MIDDLE[0] - 230, SCREEN_MIDDLE[1] + 70),
-                    (SCREEN_MIDDLE[0] - 230, SCREEN_MIDDLE[1] - 70),)
+TEAM_A_POSITIONS = ((SCREEN_MIDDLE[0] - 20 * SCALE, SCREEN_MIDDLE[1] + 40 * SCALE),
+                    (SCREEN_MIDDLE[0] - 20 * SCALE, SCREEN_MIDDLE[1] - 40 * SCALE),
+                    (SCREEN_MIDDLE[0] - 46 * SCALE, SCREEN_MIDDLE[1] + 14 * SCALE),
+                    (SCREEN_MIDDLE[0] - 46 * SCALE, SCREEN_MIDDLE[1] - 14 * SCALE))
 
-TEAM_B_POSITIONS = ((SCREEN_MIDDLE[0] + 100, SCREEN_MIDDLE[1] + 200),
-                    (SCREEN_MIDDLE[0] + 100, SCREEN_MIDDLE[1] - 200),
-                    (SCREEN_MIDDLE[0] + 230, SCREEN_MIDDLE[1] + 70),
-                    (SCREEN_MIDDLE[0] + 230, SCREEN_MIDDLE[1] - 70),)
+TEAM_B_POSITIONS = ((SCREEN_MIDDLE[0] + 20 * SCALE, SCREEN_MIDDLE[1] + 40 * SCALE),
+                    (SCREEN_MIDDLE[0] + 20 * SCALE, SCREEN_MIDDLE[1] - 40 * SCALE),
+                    (SCREEN_MIDDLE[0] + 46 * SCALE, SCREEN_MIDDLE[1] + 14 * SCALE),
+                    (SCREEN_MIDDLE[0] + 46 * SCALE, SCREEN_MIDDLE[1] - 14 * SCALE))
 CHECK_IDLE = 1
 CHECK_ACTIVE = 2
 
@@ -31,7 +31,7 @@ class ButtonSoccer(World):
         World.__init__(self)
         self.add(Scene())
         self.force = Vec2(0, 0)
-        self.add_bounds(width=(20, 10, 20, 10))
+        self.add_bounds(width=(W_DIFF, H_DIFF, W_DIFF, H_DIFF))
         
         self.create_teams()
         self.moves = 0
@@ -52,16 +52,14 @@ class ButtonSoccer(World):
         self.team_b.add_listener('released', self.movement_started)
 
     def create_goal(self):
-        self.goals = list()
-        self.goals.append(Goal("RIGHT"))
-        self.goals.append(Goal("LEFT"))
+        self.goals = (Goal("LEFT"), Goal("RIGHT"))
 
-        for gol in self.goals:
-            for dash in gol.elements():
+        for goal in self.goals:
+            for dash in goal.elements():
                 self.add(dash)
 
     def check_turn(self):
-        if self.moves >= MOVES:
+        if self.moves + 1 >= MOVES:
             self.team_a.change_turn()
             self.team_b.change_turn()
             self.moves = 0

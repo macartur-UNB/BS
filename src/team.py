@@ -2,6 +2,7 @@ from FGAme import color
 from button import Button
 from state import *
 
+
 INACTIVE_COLOR = color.Color(100, 100, 100)
 
 class Team:

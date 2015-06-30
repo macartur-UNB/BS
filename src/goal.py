@@ -1,14 +1,17 @@
 from FGAme import Circle
-from scene import SCREEN_WIDTH
+from scene import *
 
 
-DASH_RADIUS = 15
+DASH_RADIUS = 3 * SCALE
+position1 = [
+    (TAM_PEQ_AREA_ESQUERDA_LINHA[0], TAM_PEQ_AREA_ESQUERDA_LINHA[2]),
+    (TAM_PEQ_AREA_ESQUERDA_LINHA[0], TAM_PEQ_AREA_ESQUERDA_LINHA[3])
+]
 
-position1 = [(40, 380), (40, 230)]
-position2 = [(SCREEN_WIDTH - 40, 380), (SCREEN_WIDTH - 40, 230)]
-
-area1 = (40, 60, 380, 230)
-area2 = (SCREEN_WIDTH - 60, SCREEN_WIDTH - 40, 380, 230)
+position2 = [
+    (TAM_PEQ_AREA_DIREITA_LINHA[1], TAM_PEQ_AREA_DIREITA_LINHA[2]),
+    (TAM_PEQ_AREA_DIREITA_LINHA[1], TAM_PEQ_AREA_DIREITA_LINHA[3])
+]
 
 
 SIDE_LEFT = "LEFT"
@@ -19,7 +22,7 @@ class Goal:
     def __init__(self, side):
         self.__side = side
 
-        if SIDE_LEFT in self.__side:
+        if SIDE_LEFT == self.__side:
             self.superior_dash = Dash(position1[0])
             self.inferior_dash = Dash(position1[1])
         else:
