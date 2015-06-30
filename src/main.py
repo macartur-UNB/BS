@@ -9,8 +9,11 @@ from goal import Goal
 from random import randint
 from state import *
 from team import Team
+from score import *
+import time
 
 MOVES = 3
+MAX_SCORE = 3
 
 TEAM_SIZE = 4
 team_red_POSITIONS = ((SCREEN_MIDDLE[0] - 20 * SCALE, SCREEN_MIDDLE[1] + 40 * SCALE),
@@ -37,6 +40,7 @@ class ButtonSoccer(World):
 
         self.create_teams()
         self.create_goal()
+        self.create_scores()
         self.moves = 0
         
         self.ball = Ball()
@@ -66,6 +70,14 @@ class ButtonSoccer(World):
         for goal in self.goals:
             for dash in goal.elements():
                 self.add(dash)
+
+    def create_scores(self):
+        self.score_red = Score('left', 'red')
+        self.score_blue = Score('right', 'blue')
+        self.team_red.score = self.score_red
+        self.team_blue.score = self.score_blue
+        self.add(self.score_red)
+        self.add(self.score_blue)
 
     def check_turn(self):
         print('Turn -> ' + str(self.current_team))
@@ -109,12 +121,25 @@ class ButtonSoccer(World):
     def check_goal(self, goal):
         if goal.is_goal(self.ball.pos):
             goal.team_enemy.points += 1
+            goal.team_enemy.score.submit()
             self.moves = 0
             self.ball.reset()
             
+            if goal.team_enemy.points >= MAX_SCORE:
+                self.reset()
+                return
+            
             if self.current_team != goal.team_owner:
                 self.change_turn()
-        
+    
+    def reset(self):
+        time.sleep(2)
+        self.score_red.reset()
+        self.score_blue.reset()
+        self.ball.reset()
+        self.team_red.reset()
+        self.team_blue.reset()
+            
     @listen('frame-enter')
     def process(self):
         # bolinha

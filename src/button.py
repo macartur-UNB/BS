@@ -54,6 +54,11 @@ class Button(Circle, EventDispatcher):
     def change_status(self, col):
         for button in col:
             button.current_state = STATE_MOVING
+    
+    def reset(self):
+        self.pos = self.init_pos
+        self.current_state = STATE_AVAILABLE
+        self.vel = Vec2(0,0)
 
     def __distance(self, a, b):
         return (a - b).norm()

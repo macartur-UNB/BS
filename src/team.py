@@ -24,6 +24,7 @@ class Team:
         for position in self.team_position:
             button = Button(self.team_color, self.turn)
             button.pos = position
+            button.init_pos = position
             self.buttons.append(button)
 
     def change_turn(self):
@@ -58,6 +59,10 @@ class Team:
     def add_listener(self, signal, function):
         for button in self.buttons:
             button.listen(signal, function)
+    
+    def reset(self):
+        for button in self.buttons:
+            button.reset()
     
     def __str__(self):
         return self.team_name + ': ' + str(self.points)
