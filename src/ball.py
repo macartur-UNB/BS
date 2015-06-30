@@ -15,6 +15,10 @@ class Ball(Circle):
         self.pos = SCREEN_MIDDLE
         self.ball_force = Vec2(0, 0)
 
+    def reset(self):
+        self.vel = Vec2(0,0)
+        self.pos = SCREEN_MIDDLE
+
     def update_forces(self):
  #       if self.current_state & STATE_STOPPED:
         friction = - coef_friction * self.vel.normalize()
